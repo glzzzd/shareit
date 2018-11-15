@@ -1,0 +1,18 @@
+D:\Проекты\С#\shareIt2\shareIt2\bin\Debug\shareIt2.exe
+D:\Проекты\С#\shareIt2\shareIt2\bin\Debug\shareIt2.pdb
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.Form1.resources
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.Properties.Resources.resources
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.csproj.GenerateResource.Cache
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.exe
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.pdb
+D:\Проекты\С#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.csprojResolveAssemblyReference.cache
+D:\Sync\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.exe
+D:\Sync\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.pdb
+D:\Projects\C++ C#\shareIt2\shareIt2\bin\Debug\shareIt2.exe
+D:\Projects\C++ C#\shareIt2\shareIt2\bin\Debug\shareIt2.pdb
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.csprojResolveAssemblyReference.cache
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.Form1.resources
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.Properties.Resources.resources
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.csproj.GenerateResource.Cache
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.exe
+D:\Projects\C++ C#\shareIt2\shareIt2\obj\x86\Debug\shareIt2.pdb
