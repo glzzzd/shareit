@@ -10,4 +10,6 @@ Enable windows files and folders sharing easy way
 - Windows 7, 8, 8.1 or 10
 - Microsoft [.Net Framework 2.0](https://www.microsoft.com/en-US/download/details.aspx?id=1639) (for the 0.2.6 version) or [4.0](https://www.microsoft.com/en-us/download/details.aspx?id=17851) (for versions 0.3 and older)
 ## Download
-The app can be downloaded [here](https://github.com/glzzzd/shareit/tree/master/releases/)
+The app can be downloaded [here](https://github.com/glzzzd/shareit/raw/master/releases/0.3.0/shareit_en.zip)
+
+Russian version is available [here](https://github.com/glzzzd/shareit/raw/ru/releases/0.3.0/shareit_ru.zip)
