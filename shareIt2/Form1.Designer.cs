@@ -39,8 +39,6 @@
             this.unshare = new System.Windows.Forms.ToolStripMenuItem();
             this.system = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -50,6 +48,9 @@
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.посетитьСайтПрограммыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -59,16 +60,16 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(133, 13);
+            this.label1.Size = new System.Drawing.Size(94, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Выберите права доступа";
+            this.label1.Text = "Select permissions";
             // 
             // selectRights
             // 
             this.selectRights.FormattingEnabled = true;
             this.selectRights.Items.AddRange(new object[] {
-            "Чтение",
-            "Полный доступ"});
+            "Read",
+            "Read/Write"});
             this.selectRights.Location = new System.Drawing.Point(12, 60);
             this.selectRights.Name = "selectRights";
             this.selectRights.Size = new System.Drawing.Size(190, 21);
@@ -80,7 +81,7 @@
             this.shareFolder.Name = "shareFolder";
             this.shareFolder.Size = new System.Drawing.Size(190, 33);
             this.shareFolder.TabIndex = 2;
-            this.shareFolder.Text = "Выберите папку";
+            this.shareFolder.Text = "Select folder";
             this.shareFolder.UseVisualStyleBackColor = true;
             this.shareFolder.Click += new System.EventHandler(this.shareFolder_Click);
             // 
@@ -93,7 +94,7 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.ShowLines = false;
-            this.treeView1.Size = new System.Drawing.Size(200, 186);
+            this.treeView1.Size = new System.Drawing.Size(200, 281);
             this.treeView1.TabIndex = 3;
             this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
             this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
@@ -109,13 +110,14 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.unshare});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(179, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(141, 26);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // unshare
             // 
             this.unshare.Name = "unshare";
-            this.unshare.Size = new System.Drawing.Size(178, 22);
-            this.unshare.Text = "Прекратить доступ";
+            this.unshare.Size = new System.Drawing.Size(140, 22);
+            this.unshare.Text = "Stop sharing";
             this.unshare.Click += new System.EventHandler(this.unshare_Click);
             // 
             // system
@@ -124,7 +126,7 @@
             this.system.Name = "system";
             this.system.Size = new System.Drawing.Size(190, 54);
             this.system.TabIndex = 5;
-            this.system.Text = "Изменить параметры центра управления сетями и общим доступом";
+            this.system.Text = "Set up Windows to accept incoming connections";
             this.system.UseVisualStyleBackColor = true;
             this.system.Click += new System.EventHandler(this.system_Click);
             // 
@@ -133,27 +135,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(259, 35);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 13);
+            this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Список папок с доступом из сети";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.DisabledLinkColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(410, 11);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(52, 13);
-            this.linkLabel1.TabIndex = 7;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "glazdik.ru";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            this.linkLabel1.MouseHover += new System.EventHandler(this.linkLabel1_MouseHover);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.Tag = "Посетить сайт программы";
+            this.label2.Text = "Shared folders";
             // 
             // button1
             // 
@@ -161,7 +145,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(190, 32);
             this.button1.TabIndex = 9;
-            this.button1.Text = "Запустить службу сервера";
+            this.button1.Text = "Start LAN manager";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -170,18 +154,19 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 198);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
+            this.label3.Size = new System.Drawing.Size(112, 13);
             this.label3.TabIndex = 10;
-            this.label3.Text = "Служба сервера:";
+            this.label3.Text = "LAN manager service:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(101, 198);
+            this.label4.Location = new System.Drawing.Point(121, 198);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "label4";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // menuStrip1
             // 
@@ -200,14 +185,14 @@
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.выйтиToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.файлToolStripMenuItem.Text = "Файл";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.файлToolStripMenuItem.Text = "File";
             // 
             // выйтиToolStripMenuItem
             // 
             this.выйтиToolStripMenuItem.Name = "выйтиToolStripMenuItem";
             this.выйтиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.выйтиToolStripMenuItem.Text = "&Выйти";
+            this.выйтиToolStripMenuItem.Text = "&Exit";
             this.выйтиToolStripMenuItem.Click += new System.EventHandler(this.выйтиToolStripMenuItem_Click);
             // 
             // справкаToolStripMenuItem
@@ -216,30 +201,59 @@
             this.посетитьСайтПрограммыToolStripMenuItem,
             this.оПрограммеToolStripMenuItem});
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
-            this.справкаToolStripMenuItem.Text = "Справка";
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.справкаToolStripMenuItem.Text = "About";
             // 
             // посетитьСайтПрограммыToolStripMenuItem
             // 
             this.посетитьСайтПрограммыToolStripMenuItem.Name = "посетитьСайтПрограммыToolStripMenuItem";
-            this.посетитьСайтПрограммыToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.посетитьСайтПрограммыToolStripMenuItem.Text = "Посетить сайт программы";
+            this.посетитьСайтПрограммыToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.посетитьСайтПрограммыToolStripMenuItem.Text = "Check application\'s site";
             this.посетитьСайтПрограммыToolStripMenuItem.Click += new System.EventHandler(this.посетитьСайтПрограммыToolStripMenuItem_Click);
             // 
             // оПрограммеToolStripMenuItem
             // 
             this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
-            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.оПрограммеToolStripMenuItem.Text = "&О программе";
+            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.оПрограммеToolStripMenuItem.Text = "&About shareIT";
             this.оПрограммеToolStripMenuItem.Click += new System.EventHandler(this.оПрограммеToolStripMenuItem_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 283);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(187, 20);
+            this.textBox1.TabIndex = 13;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 258);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(90, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Change PC name";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(12, 309);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(187, 32);
+            this.button2.TabIndex = 15;
+            this.button2.Text = "Change";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(476, 265);
-            this.Controls.Add(this.linkLabel1);
+            this.ClientSize = new System.Drawing.Size(476, 353);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
@@ -274,8 +288,6 @@
         private System.Windows.Forms.ToolStripMenuItem unshare;
         private System.Windows.Forms.Button system;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -285,6 +297,9 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem посетитьСайтПрограммыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button2;
     }
 }
 

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Management;
-using System.Diagnostics;//process
-//using System.Security.AccessControl;
+using System.Diagnostics;
 using System.Security.Principal;
 using System.ServiceProcess;
-//using System.Security.Permissions;
-//using System.Management.Instrumentation;
-//using Microsoft.Win32;
+using Microsoft.Win32;
 
 namespace shareIt2
 {
@@ -39,8 +35,6 @@ namespace shareIt2
                 return;
             }
 
-           
-
             InitializeComponent();
             selectRights.SelectedIndex = 0;
             getShares();
@@ -49,14 +43,14 @@ namespace shareIt2
             string st = sc.Status.ToString();
             if (st == "Running")
             {
-                label4.Text = "работает";
+                label4.Text = "running";
                 label4.ForeColor = Color.FromArgb(0, 153, 0);
-                button1.Text = "Остановить службу сервера";
+                button1.Text = "Stop LAN manager service";
             }
             else {
-                label4.Text = "остановлена";
+                label4.Text = "stopped";
                 label4.ForeColor = Color.FromArgb(255,0,0);
-                button1.Text = "Запустить службу сервера";
+                button1.Text = "Start LAN manager service";
             }
             
         }
@@ -124,7 +118,7 @@ namespace shareIt2
                 if (string.IsNullOrEmpty(temp[1]))
                 {
                     string[] tmp = temp[0].Split(':');
-                    shareName = "Диск " + tmp[0];
+                    shareName = "Drive " + tmp[0];
                     path = tmp[0] + ":";
                 }
                 else
@@ -152,41 +146,40 @@ namespace shareIt2
 
                 if (!string.IsNullOrEmpty(path))
                 {
-                    string command1 = string.Format("net share \"{0}\"=\"{1}\" /grant:СЕТЬ,{2}", shareName, path, rights);
+                    string command1 = string.Format("net share \"{0}\"=\"{1}\" /grant:NETWORK,{2}", shareName, path, rights);
                     //MessageBox.Show(command1);
-                    string command2 = string.Format("echo Y | CACLS \"{0}\" /E /G СЕТЬ:\"{1}\"", path, rights2);
+                    string command2 = string.Format("echo Y | CACLS \"{0}\" /E /G NETWORK:\"{1}\"", path, rights2);
                     //MessageBox.Show(command2);
                     shareRes = Cmd.exec(command1, false);
                     shareRes2 = Cmd.exec(command2, false);
 
                     try
                     {
-                        if ((shareRes.IndexOf("общим") == -1) || (string.IsNullOrEmpty(shareRes)))
+                        if ((shareRes.IndexOf("successfully") == -1) || (string.IsNullOrEmpty(shareRes)))
                         {
-                            MessageBox.Show("Не могу обработать каталог. Возможно, он уже расшарен.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Cannot process directory. Perhaps, it is already shared.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
-                            MessageBox.Show("Доступ к каталогу из сети открыт.", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Directory was successfully shared.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             getShares();
                         }
                         if (string.IsNullOrEmpty(shareRes2))
                         {
-                            MessageBox.Show("Не могу переопределить права доступа. Перезапустите программу с правами администратора.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Cannot grant access rights. Restart the application with administrator rights.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (NullReferenceException)
                     {
-                        MessageBox.Show("Произошла ошибка.");
+                        MessageBox.Show("Error.");
                     }
 
                 }
-            }//endif
-            
-        }//end of folder share
+            } //endif
+        } //end of folder share
 
 
-        /*tree view righ click*/
+        /* tree view righ click */
         private void treeView1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -199,7 +192,7 @@ namespace shareIt2
             }
         }
 
-        /*Double click tre view item*/
+        /* Double click tree view item */
         private void treeView1_DoubleClick(object sender, EventArgs e)
         {
             TreeNode node = treeView1.SelectedNode;
@@ -218,12 +211,12 @@ namespace shareIt2
             if (string.IsNullOrEmpty(temp[1]))
             {
                 string[] tmp = temp[0].Split(':');
-                shareName = "Диск "+tmp[0];
+                shareName = "Drive "+tmp[0];
                 diskName = tmp[0] + ":";
             }
 
             object c1 = string.Format("net share \"{0}\" /delete /y", shareName);
-            object c2 = string.Format("echo Y | CACLS \"{0}\" /E /R Сеть",diskName);
+            object c2 = string.Format("echo Y | CACLS \"{0}\" /E /R Network",diskName);
             string shRes = null;
             string shRes2 = null;
             try
@@ -234,111 +227,90 @@ namespace shareIt2
             }
             catch (Exception)
             {
-                MessageBox.Show("Произошла ошибка.");
+                MessageBox.Show("Error.");
             }
 
 
-            /* Обработка ошибок */
-            if (shRes.IndexOf("успешно") == -1)
+            /* Error handling */
+            if (shRes.IndexOf("successfully") == -1)
             {
-                MessageBox.Show("Не могу закрыть доступ к каталогу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot remove the share.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (shRes.IndexOf("ошибка 5") != -1) {
-                MessageBox.Show("Каталог используется сетевым пользователем. Остановите службу сервера.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (shRes.IndexOf("error 5") != -1) {
+                MessageBox.Show("Directory is already in use. Please stop LAN manager service", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (shRes2.IndexOf("обработан") == -1)
+            else if (shRes2.IndexOf("processed") == -1)
             {
-                MessageBox.Show("Не могу удалить права доступа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot remove access rights.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("Каталог успешно обработан.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            /* Обработка ошибок */
-        }
-
-        /* Ссылочка */
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start("http://glazdik.ru/shareit/");
-            }
-            catch (Exception) {
-                MessageBox.Show("Не могу открыть браузер.");
+                MessageBox.Show("Direcory was processed successfully.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        /* Настройки центра управления сетями и общим доступом */
+        /* File and printer sharing settings */
         private void system_Click(object sender, EventArgs e)
         {
-            string r1 = Cmd.exec("netsh advfirewall firewall set rule group=\"Общий доступ к файлам и принтерам\" new enable=Yes", false);
-            string r2 = Cmd.exec("netsh advfirewall firewall set rule group=\"Обнаружение сети\" new enable=Yes", false);
-            string r3 = Cmd.exec("net user гость /active:yes", false);
+            string r1 = Cmd.exec("netsh advfirewall firewall set rule group=\"File and printer sharing\" new enable=Yes", false);
+            string r2 = Cmd.exec("netsh advfirewall firewall set rule group=\"Network discovery\" new enable=Yes", false);
+            string r3 = Cmd.exec("net user guest /active:yes", false);
 
-            Process compiler = new Process();
-            compiler.StartInfo.FileName = "lib\\SetACL32.exe";
-            compiler.StartInfo.Arguments = "-on HKEY_LOCAL_MACHINE\\SECURITY\\ -ot reg -actn setowner -ownr n:Администраторы";
-            compiler.StartInfo.UseShellExecute = false;
-            compiler.StartInfo.RedirectStandardOutput = true;
-            compiler.Start();
-            string r4 =compiler.StandardOutput.ReadToEnd();
+            string osVersion = OSVersion.getOSInfo();
+                Process compiler = new Process();
+                compiler.StartInfo.FileName = "lib\\SetACL32.exe";
+                compiler.StartInfo.Arguments = "-on HKEY_LOCAL_MACHINE\\SECURITY\\ -ot reg -actn setowner -ownr n:Administrators";
+                compiler.StartInfo.UseShellExecute = false;
+                compiler.StartInfo.RedirectStandardOutput = true;
+                compiler.Start();
+                string r4 = compiler.StandardOutput.ReadToEnd();
 
-            Process compiler2 = new Process();
-            compiler2.StartInfo.FileName = "lib\\SetACL32.exe";
-            compiler2.StartInfo.Arguments = "-on HKEY_LOCAL_MACHINE\\SECURITY\\ -ot reg -actn ace -ace \"n:Администраторы;p:full\"";
-            compiler2.StartInfo.UseShellExecute = false;
-            compiler2.StartInfo.RedirectStandardOutput = true;
-            compiler2.Start();
-            string r5 = compiler2.StandardOutput.ReadToEnd();
+                Process compiler2 = new Process();
+                compiler2.StartInfo.FileName = "lib\\SetACL32.exe";
+                compiler2.StartInfo.Arguments = "-on HKEY_LOCAL_MACHINE\\SECURITY\\ -ot reg -actn ace -ace \"n:Administrators;p:full\"";
+                compiler2.StartInfo.UseShellExecute = false;
+                compiler2.StartInfo.RedirectStandardOutput = true;
+                compiler2.Start();
+                string r5 = compiler2.StandardOutput.ReadToEnd();
 
-            NTAccount f = new NTAccount("Гость");
-            SecurityIdentifier s = (SecurityIdentifier)f.Translate(typeof(SecurityIdentifier));
-            String sid = s.ToString();
+                NTAccount f = new NTAccount("Guest");
+                SecurityIdentifier s = (SecurityIdentifier)f.Translate(typeof(SecurityIdentifier));
+                String sid = s.ToString();
 
-            string rightsRes = Cmd.exec(string.Format("reg add HKLM\\SECURITY\\Policy\\Accounts\\{0}\\ActSysAc /ve /t reg_binary /d 41000000 /f", sid), false);
+                string rightsRes = Cmd.exec(string.Format("reg add HKLM\\SECURITY\\Policy\\Accounts\\{0}\\ActSysAc /ve /t reg_binary /d 41000000 /f", sid), false);
 
             /* Обработка ошибок */
-            if (rightsRes.IndexOf("успешно") == -1)
+            if (rightsRes.IndexOf("successfully") == -1)
             {
-                MessageBox.Show("Не могу изменить параметры реестра.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot update registry.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if(r1.IndexOf("ОК") == -1){
-                MessageBox.Show("Не могу открыть общий доступ к файлам и принтерам.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else if(r2.IndexOf("ОК") == -1){
-                MessageBox.Show("Не могу включить обнаружение сети.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else if(r3.IndexOf("успешно") == -1){
-                MessageBox.Show("Не могу включить учетную запись гостя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else if(r4.IndexOf("success") == -1){
-                MessageBox.Show("Не могу переназначить права доступа к реестру.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (r4.IndexOf("success") == -1)
+            {
+                MessageBox.Show("Cannot update registry access rights.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (r5.IndexOf("success") == -1)
             {
-                MessageBox.Show("Не могу переназначить права доступа к реестру.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Cannot update registry access rights.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if(r1.IndexOf("Updated") == -1){
+                MessageBox.Show("Cannot share files and printers.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (r2.IndexOf("Updated") == -1)
+            {
+                MessageBox.Show("Cannot turn on network discovery.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (r3.IndexOf("successfully") == -1)
+            {
+                MessageBox.Show("Cannot turn guest account.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                DialogResult rest = MessageBox.Show("Доступ к компьютеру из сети успешно открыт. Для применения изменений необходимо перезагрузить компьютер. Выполнить перезагрузку сейчас?", "Сообщение", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                DialogResult rest = MessageBox.Show("Setting were applied. You need to restart your PC. Restart now?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (rest == DialogResult.Yes)
                 {
                    Cmd.exec("shutdown /r /t 0",false);
                 }
             }
-            /* Обработка ошибок */
-        }/*Настройки центра управления сетями и общим доступом*/
-
-        /*О программе*/
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MessageBox.Show("shareIt v. 0.11b\r\nglazdik.ru, 2016\r\nЛицензия MIT");
-        }
-
-        private void linkLabel1_MouseHover(object sender, EventArgs e)
-        {
-            toolTip1.Show("Посетить сайт программы",linkLabel1);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -355,15 +327,15 @@ namespace shareIt2
                     // Start the service, and wait until its status is "Running".
                     sc.Start();
                     sc.WaitForStatus(ServiceControllerStatus.Running);
-                    label4.Text = "работает";
+                    label4.Text = "runnnig";
                     label4.ForeColor = Color.FromArgb(0, 153, 0);
-                    button1.Text = "Остановить службу сервера";
+                    button1.Text = "Stop LAN manager service";
                     getShares();
                     button1.Enabled = true;
                 }
                 catch (InvalidOperationException)
                 {
-                    MessageBox.Show("Не могу запустить службу сервера.");
+                    MessageBox.Show("Cannot stop LAN manager service.");
                     button1.Enabled = true;
                 }
             }
@@ -374,21 +346,21 @@ namespace shareIt2
                     // Start the service, and wait until its status is "Running".
                     sc.Stop();
                     sc.WaitForStatus(ServiceControllerStatus.Stopped);
-                    label4.Text = "остановлена";
+                    label4.Text = "stopped";
                     label4.ForeColor = Color.FromArgb(255, 0, 0);
-                    button1.Text = "Запустить службу сервера";
+                    button1.Text = "Start LAN manager service";
                     button1.Enabled = true;
                 }
                 catch (InvalidOperationException)
                 {
-                    MessageBox.Show("Не могу запустить службу сервера.");
+                    MessageBox.Show("Cannot start LAN manager service.");
                     button1.Enabled = true;
                 }
             }
         }
 
         /* TOP MENU */
-        private void выйтиToolStripMenuItem_Click(object sender, EventArgs e)
+        private void eixtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
@@ -397,22 +369,75 @@ namespace shareIt2
         {
             try
             {
-                Process.Start("http://glazdik.ru/shareit/");
+                Process.Start("https://github.com/glzzzd/shareIt/");
             }
             catch (Exception)
             {
-                MessageBox.Show("Не могу открыть браузер.");
+                MessageBox.Show("Cannot open browser.");
             }
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("shareIt 0.21\r\nglazdik.ru, 2016\r\nЛицензия MIT");
+            MessageBox.Show("shareIt v. 0.3.0\r\nIlya Hlazdouski, 2016\r\nMIT License");
         }
 
-        /*Изменение netBIOS имени*/
-        
+        private void label4_Click(object sender, EventArgs e)
+        {
 
-       
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        /* Change PC name */
+        private bool SetMachineName(string newName)
+        {
+            RegistryKey key = Registry.LocalMachine;
+
+            string activeComputerName = "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ActiveComputerName";
+            RegistryKey activeCmpName = key.CreateSubKey(activeComputerName);
+            activeCmpName.SetValue("ComputerName", newName);
+            activeCmpName.Close();
+            string computerName = "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName";
+            RegistryKey cmpName = key.CreateSubKey(computerName);
+            cmpName.SetValue("ComputerName", newName);
+            cmpName.Close();
+            string _hostName = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\";
+            RegistryKey hostName = key.CreateSubKey(_hostName);
+            hostName.SetValue("Hostname", newName);
+            hostName.SetValue("NV Hostname", newName);
+            hostName.Close();
+            return true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string name = textBox1.Text;
+            if (this.SetMachineName(name))
+            {
+                DialogResult rest = MessageBox.Show("Setting were applied. You need to restart your PC. Restart now?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (rest == DialogResult.Yes)
+                {
+                    Cmd.exec("shutdown /r /t 0", false);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Cannot rename PC.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void выйтиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
